@@ -6,7 +6,7 @@ import com.dev_ajay.scalerdemo1.Service.ProductService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping
 public class ProductController {
 
     private final ProductService productService;
