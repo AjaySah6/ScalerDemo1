@@ -9,7 +9,8 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class FakeStoreProductService implements ProductService {
@@ -71,5 +72,61 @@ public class FakeStoreProductService implements ProductService {
         //Response Handling: Checks if the response was successful and returns the converted Product object if so, otherwise returns null.
         //Exception Handling: Catches and prints exceptions, returning null if any error occurs.
     }
+
+    @Override
+    public List<Product> getAllProduct(){  // will return ResponseEntity wrapped around the data
+
+        FakeStoreProductDTO[] response = restTemplate.getForObject(
+                "https://fakestoreapi.com/products", FakeStoreProductDTO[].class);
+
+        List<Product> products = new ArrayList<>();
+
+        for(FakeStoreProductDTO fakeStoreProductDTO : response) {
+            products.add(fakeStoreProductDTO.toProduct());
+        }
+
+        return products;
+    }
+
+    @Override
+    public List<String> getAllCategories(){
+        String[] categories = restTemplate.getForObject(
+                "https://fakestoreapi.com/products/categories", String[].class);
+
+        List<String> categoryList = new ArrayList<>();
+        for(String category : categories) {
+            categoryList.add(category);
+        }
+        return categoryList;
+        //String category: Declares a variable category of type String, which will hold each element of the categories array one at a time during each iteration.
+        //categories: Means "for each element in the categories array."
+    }
+
+    @Override
+    public Product updateProduct(Long id, String title, double price, String description, String image, String category) {
+        // Create the DTO to send to the API
+        FakeStoreProductDTO fakeStoreProductDTO = new FakeStoreProductDTO();
+        fakeStoreProductDTO.setId(id);
+        fakeStoreProductDTO.setTitle(title);
+        fakeStoreProductDTO.setPrice(price);
+        fakeStoreProductDTO.setDescription(description);
+        fakeStoreProductDTO.setImage(image);
+        fakeStoreProductDTO.setCategory(category);
+
+        // Log the payload
+        System.out.println("Sending request to update product: " + fakeStoreProductDTO);
+
+        // Make the PUT request to update the product
+        restTemplate.put("https://fakestoreapi.com/products/{id}", fakeStoreProductDTO, id);
+
+        // After the update, fetch the updated product details
+        return getSingleProduct(id);
+
+    }
+    @Override
+    public void deleteProduct(Long id) {
+        restTemplate.delete("https://fakestoreapi.com/products/{id}", id);
+    }
+
 }
 
