@@ -1,5 +1,7 @@
 package com.dev_ajay.scalerdemo1.Models;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,13 +12,13 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 
-
-// Front end format
-public class Product {
-    private Long id;
+@Entity
+public class Product extends BaseModel {
+    //private Long id;
     private String title;
     private String description;
     private double price;
     private String imageUrl;
+    @ManyToOne
     private Category category;
 }
