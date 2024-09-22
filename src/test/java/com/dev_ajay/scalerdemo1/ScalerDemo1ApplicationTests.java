@@ -1,13 +1,10 @@
 package com.dev_ajay.scalerdemo1;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-
-@SpringBootTest
+//@SpringBootTest
 class ScalerDemo1ApplicationTests {
-//
+    // No tests here
+
 //    @Test
-//    void contextLoads() {
-//    }
+//     void contextLoads() { }
 
 }
