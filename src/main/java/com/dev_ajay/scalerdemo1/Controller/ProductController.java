@@ -1,10 +1,10 @@
 package com.dev_ajay.scalerdemo1.Controller;
 
 import com.dev_ajay.scalerdemo1.DTO.CreateProductRequestDTO;
-import com.dev_ajay.scalerdemo1.Models.Category;
 import com.dev_ajay.scalerdemo1.Models.Product;
 import com.dev_ajay.scalerdemo1.Service.ProductService;
 import com.dev_ajay.scalerdemo1.exceptions.ProductNotFoundException;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,13 +17,16 @@ public class ProductController {
 
     private final ProductService productService;
 
-    public ProductController(ProductService productService) {
+    public ProductController(@Qualifier("selfProductService") ProductService productService) {
         this.productService = productService;
     }
 
     @GetMapping("/products/{id}")
     public Product getProductById(@PathVariable("id") Long id) {
         return productService.getSingleProduct(id);
+
+        // getSingleProduct method in the ProductService interface returns an Optional<Product> to indicate that the product might not be found.
+        //This code unwraps the Optional using orElseThrow, which throws a ProductNotFoundException if the product is not found.
     }
 
     @PostMapping("/products")

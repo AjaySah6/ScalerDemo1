@@ -1,5 +1,6 @@
 package com.dev_ajay.scalerdemo1.Models;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,7 @@ public class Product extends BaseModel {
     private String description;
     private double price;
     private String imageUrl;
-    @ManyToOne
+
+    @ManyToOne(cascade = {CascadeType.PERSIST})
     private Category category;
 }

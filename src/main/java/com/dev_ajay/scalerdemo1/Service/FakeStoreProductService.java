@@ -2,12 +2,12 @@ package com.dev_ajay.scalerdemo1.Service;
 
 import com.dev_ajay.scalerdemo1.DTO.FakeStoreProductDTO;
 import com.dev_ajay.scalerdemo1.Models.Product;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +35,7 @@ public class FakeStoreProductService implements ProductService {
 
         return fakeStoreProductDTO.toProduct();
     }
+
 
     // The parameters in productService.createProduct should match the DTO.
     @Override
@@ -102,9 +103,30 @@ public class FakeStoreProductService implements ProductService {
         //categories: Means "for each element in the categories array."
     }
 
+//    @Override
+//    public Product updateProduct(Long id, String title, double price, String description, String image, String category) {
+//        // Create the DTO to send to the API
+//        FakeStoreProductDTO fakeStoreProductDTO = new FakeStoreProductDTO();
+//        fakeStoreProductDTO.setId(id);
+//        fakeStoreProductDTO.setTitle(title);
+//        fakeStoreProductDTO.setPrice(price);
+//        fakeStoreProductDTO.setDescription(description);
+//        fakeStoreProductDTO.setImage(image);
+//        fakeStoreProductDTO.setCategory(category);
+//
+//        // Log the payload
+//        System.out.println("Sending request to update product: " + fakeStoreProductDTO);
+//
+//        // Make the PUT request to update the product
+//        restTemplate.put("https://fakestoreapi.com/products/{id}", fakeStoreProductDTO, id);
+//
+//        // After the update, fetch the updated product details
+//        return getSingleProduct(id);
+//
+//    }
+
     @Override
     public Product updateProduct(Long id, String title, double price, String description, String image, String category) {
-        // Create the DTO to send to the API
         FakeStoreProductDTO fakeStoreProductDTO = new FakeStoreProductDTO();
         fakeStoreProductDTO.setId(id);
         fakeStoreProductDTO.setTitle(title);
@@ -113,15 +135,15 @@ public class FakeStoreProductService implements ProductService {
         fakeStoreProductDTO.setImage(image);
         fakeStoreProductDTO.setCategory(category);
 
-        // Log the payload
         System.out.println("Sending request to update product: " + fakeStoreProductDTO);
 
-        // Make the PUT request to update the product
-        restTemplate.put("https://fakestoreapi.com/products/{id}", fakeStoreProductDTO, id);
-
-        // After the update, fetch the updated product details
+        try {
+            restTemplate.put("https://fakestoreapi.com/products/{id}", fakeStoreProductDTO, id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Handle exception (optional: log error message)
+        }
         return getSingleProduct(id);
-
     }
     @Override
     public void deleteProduct(Long id) {
