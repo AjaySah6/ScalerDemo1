@@ -1,6 +1,7 @@
 package com.dev_ajay.scalerdemo1.Repositories;
 
 import com.dev_ajay.scalerdemo1.Models.Product;
+import com.dev_ajay.scalerdemo1.Repositories.Projections.ProductPrice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,6 +21,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     // Native SQL query
     @Query(value = "select * from product where id = :id and title = :title", nativeQuery = true)
-    Product getProductWithSomeTitleAndId(@Param("title") String title,
-                                         @Param("id") Long id);
+    ProductPrice getProductWithSomeTitleAndId(@Param("title") String title,
+                                              @Param("id") Long id);
 }

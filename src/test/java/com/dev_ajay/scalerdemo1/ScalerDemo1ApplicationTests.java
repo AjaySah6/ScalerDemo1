@@ -1,7 +1,7 @@
 package com.dev_ajay.scalerdemo1;
 
-import com.dev_ajay.scalerdemo1.Models.Product;
 import com.dev_ajay.scalerdemo1.Repositories.ProductRepository;
+import com.dev_ajay.scalerdemo1.Repositories.Projections.ProductPrice;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +15,7 @@ public class ScalerDemo1ApplicationTests {
     @Test
     public void testingQuery() {
         // Assuming there's a product with a specific title and id in your database
-        Product product = productRepository.getProductWithSomeTitleAndId("iPhone XR", 1L);
+        ProductPrice product = productRepository.getProductWithSomeTitleAndId("iPhone XR", 1L);
 
         // Print the price of the product if found
         if (product != null) {
