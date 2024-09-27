@@ -2,6 +2,7 @@ package com.dev_ajay.scalerdemo1.Service;
 
 import com.dev_ajay.scalerdemo1.DTO.FakeStoreProductDTO;
 import com.dev_ajay.scalerdemo1.Models.Product;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -12,29 +13,44 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+@Service("FakeStoreProductService")
 public class FakeStoreProductService implements ProductService {
 
     private final RestTemplate restTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
-    public FakeStoreProductService(RestTemplate restTemplate) {
+    public FakeStoreProductService(RestTemplate restTemplate,
+                                   RedisTemplate<String,Object> redisTemplate) { // it takes string and return object
         this.restTemplate = restTemplate;
+        this.redisTemplate = redisTemplate;
     }
 
     @Override
     public Product getSingleProduct(Long id) {
-        // Removed the unnecessary creation of a new RestTemplate instance
-        // RestTemplate restTemplate = new RestTemplate(); // This line is removed
 
+        // Before making call to API, we can check Redis first, if it contains the required data
+        Product productFromCache = (Product) redisTemplate.opsForValue().get(String.valueOf(id));
+        if (productFromCache != null) {
+            return productFromCache; // If Redis has the data, simply return it
+        }
+
+        // If Redis doesn't have the data, use restTemplate to get the data from the API
         String url = "https://fakestoreapi.com/products/" + id;
         FakeStoreProductDTO fakeStoreProductDTO = restTemplate.getForObject(url, FakeStoreProductDTO.class);
 
         if (fakeStoreProductDTO == null) {
-            return null;
+            return null; // If the API doesn't return a product, return null
         }
 
-        return fakeStoreProductDTO.toProduct();
+        // Convert DTO to Product
+        Product product = fakeStoreProductDTO.toProduct();
+
+        // Store the product in Redis for future use
+        redisTemplate.opsForValue().set(String.valueOf(id), product); // but can not send the java object over the network to Redis eventually -> need to serialize it (convert to byte)
+        //implement Serializable in model > Product and Category
+        return product;
     }
+
 
 
     // The parameters in productService.createProduct should match the DTO.
